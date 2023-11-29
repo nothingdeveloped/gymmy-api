@@ -15,5 +15,5 @@ COPY . .
 RUN chown -R node:node /opt/app
 USER node
 RUN ["npm", "run", "build"]
-EXPOSE 1337
-CMD ["npm", "run", "develop"]
+EXPOSE 8080
+CMD ["npm", "run" ,"run"]
