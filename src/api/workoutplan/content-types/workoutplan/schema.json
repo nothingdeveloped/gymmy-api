@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "workoutplans",
+  "info": {
+    "singularName": "workoutplan",
+    "pluralName": "workoutplans",
+    "displayName": "workoutplan",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "cat_sch": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::cat-sch.cat-sch",
+      "inversedBy": "workoutplans"
+    },
+    "days": {
+      "type": "string"
+    }
+  }
+}

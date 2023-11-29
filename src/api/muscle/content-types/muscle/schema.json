@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "muscles",
+  "info": {
+    "singularName": "muscle",
+    "pluralName": "muscles",
+    "displayName": "muscle"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    }
+  }
+}

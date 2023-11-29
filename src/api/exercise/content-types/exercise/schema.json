@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "exercises",
+  "info": {
+    "singularName": "exercise",
+    "pluralName": "exercises",
+    "displayName": "exercise",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "description": {
+      "type": "json"
+    },
+    "title": {
+      "type": "string"
+    },
+    "time": {
+      "type": "float"
+    },
+    "cat_sch": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::cat-sch.cat-sch",
+      "inversedBy": "exercises"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "muscle": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::muscle.muscle"
+    },
+    "difficulty": {
+      "type": "decimal",
+      "max": 5,
+      "min": 0
+    }
+  }
+}
