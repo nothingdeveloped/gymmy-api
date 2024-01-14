@@ -42,6 +42,9 @@
       "relation": "oneToMany",
       "target": "api::workoutplan.workoutplan",
       "mappedBy": "cat_sch"
+    },
+    "description": {
+      "type": "text"
     }
   }
 }

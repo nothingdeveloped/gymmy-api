@@ -39,6 +39,12 @@
       "type": "decimal",
       "max": 5,
       "min": 0
+    },
+    "accessories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::accessory.accessory",
+      "mappedBy": "exercises"
     }
   }
 }

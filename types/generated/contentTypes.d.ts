@@ -682,6 +682,47 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiAccessoryAccessory extends Schema.CollectionType {
+  collectionName: 'accessories';
+  info: {
+    singularName: 'accessory';
+    pluralName: 'accessories';
+    displayName: 'accessory';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String;
+    description: Attribute.Text;
+    image_url: Attribute.String;
+    banner_images: Attribute.JSON;
+    cta: Attribute.String;
+    link: Attribute.String;
+    exercises: Attribute.Relation<
+      'api::accessory.accessory',
+      'manyToMany',
+      'api::exercise.exercise'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::accessory.accessory',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::accessory.accessory',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiCatSchCatSch extends Schema.CollectionType {
   collectionName: 'cat_sches';
   info: {
@@ -713,6 +754,7 @@ export interface ApiCatSchCatSch extends Schema.CollectionType {
       'oneToMany',
       'api::workoutplan.workoutplan'
     >;
+    description: Attribute.Text;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -770,6 +812,112 @@ export interface ApiCategoryCategory extends Schema.CollectionType {
   };
 }
 
+export interface ApiDailyQuoteDailyQuote extends Schema.SingleType {
+  collectionName: 'daily_quotes';
+  info: {
+    singularName: 'daily-quote';
+    pluralName: 'daily-quotes';
+    displayName: 'DailyQuote';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    quote: Attribute.JSON & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::daily-quote.daily-quote',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::daily-quote.daily-quote',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiDashboardDashboard extends Schema.CollectionType {
+  collectionName: 'dashboards';
+  info: {
+    singularName: 'dashboard';
+    pluralName: 'dashboards';
+    displayName: 'Dashboard';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String;
+    order: Attribute.Integer & Attribute.DefaultTo<0>;
+    style: Attribute.Enumeration<
+      ['TWO_ROW', 'THREE_COL', 'FOUR_COL', 'ROW_LIST', 'ROW_LIST_ADV']
+    >;
+    items: Attribute.Relation<
+      'api::dashboard.dashboard',
+      'oneToMany',
+      'api::dashboard-item.dashboard-item'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::dashboard.dashboard',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::dashboard.dashboard',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiDashboardItemDashboardItem extends Schema.CollectionType {
+  collectionName: 'dashboard_items';
+  info: {
+    singularName: 'dashboard-item';
+    pluralName: 'dashboard-items';
+    displayName: 'DashboardItem';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String & Attribute.Required;
+    description: Attribute.Text;
+    image_url: Attribute.String & Attribute.Required;
+    banner_image_url: Attribute.String;
+    props: Attribute.JSON;
+    prefer: Attribute.Decimal & Attribute.Required & Attribute.DefaultTo<0>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::dashboard-item.dashboard-item',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::dashboard-item.dashboard-item',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiExerciseExercise extends Schema.CollectionType {
   collectionName: 'exercises';
   info: {
@@ -801,6 +949,11 @@ export interface ApiExerciseExercise extends Schema.CollectionType {
         min: 0;
         max: 5;
       }>;
+    accessories: Attribute.Relation<
+      'api::exercise.exercise',
+      'manyToMany',
+      'api::accessory.accessory'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -940,8 +1093,12 @@ declare module '@strapi/types' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'api::accessory.accessory': ApiAccessoryAccessory;
       'api::cat-sch.cat-sch': ApiCatSchCatSch;
       'api::category.category': ApiCategoryCategory;
+      'api::daily-quote.daily-quote': ApiDailyQuoteDailyQuote;
+      'api::dashboard.dashboard': ApiDashboardDashboard;
+      'api::dashboard-item.dashboard-item': ApiDashboardItemDashboardItem;
       'api::exercise.exercise': ApiExerciseExercise;
       'api::muscle.muscle': ApiMuscleMuscle;
       'api::subscription.subscription': ApiSubscriptionSubscription;

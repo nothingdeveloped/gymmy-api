@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "dashboards",
+  "info": {
+    "singularName": "dashboard",
+    "pluralName": "dashboards",
+    "displayName": "Dashboard",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    },
+    "style": {
+      "type": "enumeration",
+      "enum": [
+        "TWO_ROW",
+        "THREE_COL",
+        "FOUR_COL",
+        "ROW_LIST",
+        "ROW_LIST_ADV"
+      ]
+    },
+    "items": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::dashboard-item.dashboard-item"
+    }
+  }
+}

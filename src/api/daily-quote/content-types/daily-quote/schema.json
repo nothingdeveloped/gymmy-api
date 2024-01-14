@@ -1,0 +1,19 @@
+{
+  "kind": "singleType",
+  "collectionName": "daily_quotes",
+  "info": {
+    "singularName": "daily-quote",
+    "pluralName": "daily-quotes",
+    "displayName": "DailyQuote"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "quote": {
+      "type": "json",
+      "required": true
+    }
+  }
+}

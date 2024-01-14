@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "accessories",
+  "info": {
+    "singularName": "accessory",
+    "pluralName": "accessories",
+    "displayName": "accessory",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "banner_images": {
+      "type": "json"
+    },
+    "cta": {
+      "type": "string"
+    },
+    "link": {
+      "type": "string"
+    },
+    "exercises": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::exercise.exercise",
+      "inversedBy": "accessories"
+    }
+  }
+}

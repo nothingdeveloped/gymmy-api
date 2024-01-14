@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_challenge_challenges",
+  "info": {
+    "displayName": "challenge",
+    "icon": "bell"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "banner_image_url": {
+      "type": "string"
+    },
+    "props": {
+      "type": "json"
+    }
+  }
+}
