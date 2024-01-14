@@ -12,7 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "description": {
+    "details": {
       "type": "json"
     },
     "title": {
@@ -20,12 +20,6 @@
     },
     "time": {
       "type": "float"
-    },
-    "cat_sch": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::cat-sch.cat-sch",
-      "inversedBy": "exercises"
     },
     "image_url": {
       "type": "string"
@@ -45,6 +39,20 @@
       "relation": "manyToMany",
       "target": "api::accessory.accessory",
       "mappedBy": "exercises"
+    },
+    "description": {
+      "type": "text"
+    },
+    "dashboard_item": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "cat_sch": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::cat-sch.cat-sch",
+      "inversedBy": "exercises"
     }
   }
 }

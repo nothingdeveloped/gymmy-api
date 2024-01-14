@@ -744,17 +744,20 @@ export interface ApiCatSchCatSch extends Schema.CollectionType {
       'manyToMany',
       'api::category.category'
     >;
-    exercises: Attribute.Relation<
-      'api::cat-sch.cat-sch',
-      'oneToMany',
-      'api::exercise.exercise'
-    >;
     workoutplans: Attribute.Relation<
       'api::cat-sch.cat-sch',
       'oneToMany',
       'api::workoutplan.workoutplan'
     >;
     description: Attribute.Text;
+    equipment: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
+    exercises: Attribute.Relation<
+      'api::cat-sch.cat-sch',
+      'manyToMany',
+      'api::exercise.exercise'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -900,6 +903,11 @@ export interface ApiDashboardItemDashboardItem extends Schema.CollectionType {
     banner_image_url: Attribute.String;
     props: Attribute.JSON;
     prefer: Attribute.Decimal & Attribute.Required & Attribute.DefaultTo<0>;
+    exercises: Attribute.Relation<
+      'api::dashboard-item.dashboard-item',
+      'oneToMany',
+      'api::exercise.exercise'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -930,14 +938,9 @@ export interface ApiExerciseExercise extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    description: Attribute.JSON;
+    details: Attribute.JSON;
     title: Attribute.String;
     time: Attribute.Float;
-    cat_sch: Attribute.Relation<
-      'api::exercise.exercise',
-      'manyToOne',
-      'api::cat-sch.cat-sch'
-    >;
     image_url: Attribute.String;
     muscle: Attribute.Relation<
       'api::exercise.exercise',
@@ -953,6 +956,15 @@ export interface ApiExerciseExercise extends Schema.CollectionType {
       'api::exercise.exercise',
       'manyToMany',
       'api::accessory.accessory'
+    >;
+    description: Attribute.Text;
+    dashboard_item: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
+    cat_sch: Attribute.Relation<
+      'api::exercise.exercise',
+      'manyToMany',
+      'api::cat-sch.cat-sch'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

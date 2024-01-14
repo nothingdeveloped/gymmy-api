@@ -31,12 +31,6 @@
       "target": "api::category.category",
       "inversedBy": "cat_sches"
     },
-    "exercises": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::exercise.exercise",
-      "mappedBy": "cat_sch"
-    },
     "workoutplans": {
       "type": "relation",
       "relation": "oneToMany",
@@ -45,6 +39,17 @@
     },
     "description": {
       "type": "text"
+    },
+    "equipment": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "exercises": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::exercise.exercise",
+      "mappedBy": "cat_sch"
     }
   }
 }
