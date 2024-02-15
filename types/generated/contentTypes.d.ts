@@ -665,6 +665,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'oneToMany',
       'api::subscription.subscription'
     >;
+    wallet: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'api::wallet.wallet'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -860,7 +865,14 @@ export interface ApiDashboardDashboard extends Schema.CollectionType {
     title: Attribute.String;
     order: Attribute.Integer & Attribute.DefaultTo<0>;
     style: Attribute.Enumeration<
-      ['TWO_ROW', 'THREE_COL', 'FOUR_COL', 'ROW_LIST', 'ROW_LIST_ADV']
+      [
+        'TWO_ROW',
+        'THREE_COL',
+        'FOUR_COL',
+        'ROW_LIST',
+        'ROW_LIST_ADV',
+        'TWO_ROW_GRID'
+      ]
     >;
     items: Attribute.Relation<
       'api::dashboard.dashboard',
@@ -908,6 +920,10 @@ export interface ApiDashboardItemDashboardItem extends Schema.CollectionType {
       'oneToMany',
       'api::exercise.exercise'
     >;
+    color: Attribute.String &
+      Attribute.SetMinMaxLength<{
+        maxLength: 15;
+      }>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -966,6 +982,7 @@ export interface ApiExerciseExercise extends Schema.CollectionType {
       'manyToMany',
       'api::cat-sch.cat-sch'
     >;
+    banner_image_urls: Attribute.JSON;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1023,18 +1040,19 @@ export interface ApiSubscriptionSubscription extends Schema.CollectionType {
     description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    email: Attribute.Email & Attribute.Required & Attribute.Unique;
     user: Attribute.Relation<
       'api::subscription.subscription',
       'manyToOne',
       'plugin::users-permissions.user'
     >;
+    order_id: Attribute.String;
+    purchased_at: Attribute.DateTime;
+    region: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::subscription.subscription',
       'oneToOne',
@@ -1043,6 +1061,40 @@ export interface ApiSubscriptionSubscription extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::subscription.subscription',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiWalletWallet extends Schema.CollectionType {
+  collectionName: 'wallets';
+  info: {
+    singularName: 'wallet';
+    pluralName: 'wallets';
+    displayName: 'wallet';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    coins: Attribute.BigInteger;
+    user: Attribute.Relation<
+      'api::wallet.wallet',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::wallet.wallet',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::wallet.wallet',
       'oneToOne',
       'admin::user'
     > &
@@ -1114,6 +1166,7 @@ declare module '@strapi/types' {
       'api::exercise.exercise': ApiExerciseExercise;
       'api::muscle.muscle': ApiMuscleMuscle;
       'api::subscription.subscription': ApiSubscriptionSubscription;
+      'api::wallet.wallet': ApiWalletWallet;
       'api::workoutplan.workoutplan': ApiWorkoutplanWorkoutplan;
     }
   }

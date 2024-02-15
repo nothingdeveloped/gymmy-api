@@ -26,7 +26,8 @@
         "THREE_COL",
         "FOUR_COL",
         "ROW_LIST",
-        "ROW_LIST_ADV"
+        "ROW_LIST_ADV",
+        "TWO_ROW_GRID"
       ]
     },
     "items": {

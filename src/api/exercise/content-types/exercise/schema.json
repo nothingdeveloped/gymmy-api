@@ -53,6 +53,10 @@
       "relation": "manyToMany",
       "target": "api::cat-sch.cat-sch",
       "inversedBy": "exercises"
+    },
+    "banner_image_urls": {
+      "type": "json",
+      "required": false
     }
   }
 }

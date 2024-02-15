@@ -8,20 +8,24 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "email": {
-      "type": "email",
-      "required": true,
-      "unique": true
-    },
     "user": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "subscriptions"
+    },
+    "order_id": {
+      "type": "string"
+    },
+    "purchased_at": {
+      "type": "datetime"
+    },
+    "region": {
+      "type": "string"
     }
   }
 }

@@ -71,6 +71,12 @@
       "relation": "oneToMany",
       "target": "api::subscription.subscription",
       "mappedBy": "user"
+    },
+    "wallet": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::wallet.wallet",
+      "mappedBy": "user"
     }
   }
 }

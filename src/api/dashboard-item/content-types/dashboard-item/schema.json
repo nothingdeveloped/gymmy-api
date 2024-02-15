@@ -38,6 +38,10 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::exercise.exercise"
+    },
+    "color": {
+      "type": "string",
+      "maxLength": 15
     }
   }
 }
