@@ -749,11 +749,6 @@ export interface ApiCatSchCatSch extends Schema.CollectionType {
       'manyToMany',
       'api::category.category'
     >;
-    workoutplans: Attribute.Relation<
-      'api::cat-sch.cat-sch',
-      'oneToMany',
-      'api::workoutplan.workoutplan'
-    >;
     description: Attribute.Text;
     equipment: Attribute.Boolean &
       Attribute.Required &
@@ -762,6 +757,11 @@ export interface ApiCatSchCatSch extends Schema.CollectionType {
       'api::cat-sch.cat-sch',
       'manyToMany',
       'api::exercise.exercise'
+    >;
+    workoutplans: Attribute.Relation<
+      'api::cat-sch.cat-sch',
+      'manyToMany',
+      'api::workoutplan.workoutplan'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -871,7 +871,9 @@ export interface ApiDashboardDashboard extends Schema.CollectionType {
         'FOUR_COL',
         'ROW_LIST',
         'ROW_LIST_ADV',
-        'TWO_ROW_GRID'
+        'TWO_ROW_GRID',
+        'BANNER',
+        'SLIDER'
       ]
     >;
     items: Attribute.Relation<
@@ -1119,7 +1121,7 @@ export interface ApiWorkoutplanWorkoutplan extends Schema.CollectionType {
     description: Attribute.Text;
     cat_sch: Attribute.Relation<
       'api::workoutplan.workoutplan',
-      'manyToOne',
+      'manyToMany',
       'api::cat-sch.cat-sch'
     >;
     days: Attribute.String;
