@@ -1,0 +1,47 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_cat_sches",
+  "info": {
+    "singularName": "user-cat-sch",
+    "pluralName": "user-cat-sches",
+    "displayName": "user_cat_sch",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "exer_count": {
+      "type": "integer"
+    },
+    "equipment": {
+      "type": "boolean",
+      "default": false
+    },
+    "user_exercises": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::user-exercise.user-exercise",
+      "inversedBy": "user_cat_sches"
+    },
+    "user_workoutplans": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::user-workoutplan.user-workoutplan",
+      "inversedBy": "user_cat_sches"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "user_cat_sches"
+    }
+  }
+}

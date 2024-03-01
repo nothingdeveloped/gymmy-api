@@ -9,8 +9,7 @@
     "displayName": "User"
   },
   "options": {
-    "draftAndPublish": false,
-    "timestamps": true
+    "draftAndPublish": false
   },
   "attributes": {
     "username": {
@@ -76,6 +75,40 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::wallet.wallet",
+      "mappedBy": "user"
+    },
+    "user_exercises": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::user-exercise.user-exercise",
+      "mappedBy": "user"
+    },
+    "subscribed": {
+      "type": "boolean",
+      "default": false,
+      "required": true,
+      "private": true
+    },
+    "subscriber": {
+      "type": "boolean",
+      "default": false,
+      "required": true,
+      "private": true
+    },
+    "subscription_expire_time": {
+      "type": "datetime",
+      "private": true
+    },
+    "user_workoutplans": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::user-workoutplan.user-workoutplan",
+      "mappedBy": "user"
+    },
+    "user_cat_sches": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::user-cat-sch.user-cat-sch",
       "mappedBy": "user"
     }
   }

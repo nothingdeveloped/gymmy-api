@@ -631,7 +631,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -669,6 +668,30 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.user',
       'oneToOne',
       'api::wallet.wallet'
+    >;
+    user_exercises: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::user-exercise.user-exercise'
+    >;
+    subscribed: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.Private &
+      Attribute.DefaultTo<false>;
+    subscriber: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.Private &
+      Attribute.DefaultTo<false>;
+    subscription_expire_time: Attribute.DateTime & Attribute.Private;
+    user_workoutplans: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::user-workoutplan.user-workoutplan'
+    >;
+    user_cat_sches: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::user-cat-sch.user-cat-sch'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1053,6 +1076,14 @@ export interface ApiSubscriptionSubscription extends Schema.CollectionType {
     order_id: Attribute.String;
     purchased_at: Attribute.DateTime;
     region: Attribute.String;
+    token: Attribute.String &
+      Attribute.Required &
+      Attribute.Private &
+      Attribute.Unique;
+    last_order_id: Attribute.String;
+    email: Attribute.Email & Attribute.Required;
+    product_id: Attribute.String & Attribute.Required;
+    expire_time: Attribute.DateTime & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1063,6 +1094,143 @@ export interface ApiSubscriptionSubscription extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::subscription.subscription',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiUserCatSchUserCatSch extends Schema.CollectionType {
+  collectionName: 'user_cat_sches';
+  info: {
+    singularName: 'user-cat-sch';
+    pluralName: 'user-cat-sches';
+    displayName: 'user_cat_sch';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String;
+    description: Attribute.Text;
+    exer_count: Attribute.Integer;
+    equipment: Attribute.Boolean & Attribute.DefaultTo<false>;
+    user_exercises: Attribute.Relation<
+      'api::user-cat-sch.user-cat-sch',
+      'manyToMany',
+      'api::user-exercise.user-exercise'
+    >;
+    user_workoutplans: Attribute.Relation<
+      'api::user-cat-sch.user-cat-sch',
+      'manyToMany',
+      'api::user-workoutplan.user-workoutplan'
+    >;
+    user: Attribute.Relation<
+      'api::user-cat-sch.user-cat-sch',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::user-cat-sch.user-cat-sch',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::user-cat-sch.user-cat-sch',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiUserExerciseUserExercise extends Schema.CollectionType {
+  collectionName: 'user_exercises';
+  info: {
+    singularName: 'user-exercise';
+    pluralName: 'user-exercises';
+    displayName: 'user_exercise';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String;
+    description: Attribute.Text;
+    time: Attribute.Float;
+    user_cat_sches: Attribute.Relation<
+      'api::user-exercise.user-exercise',
+      'manyToMany',
+      'api::user-cat-sch.user-cat-sch'
+    >;
+    tags: Attribute.Text;
+    user: Attribute.Relation<
+      'api::user-exercise.user-exercise',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    image_url: Attribute.Media;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::user-exercise.user-exercise',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::user-exercise.user-exercise',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiUserWorkoutplanUserWorkoutplan
+  extends Schema.CollectionType {
+  collectionName: 'user_workoutplans';
+  info: {
+    singularName: 'user-workoutplan';
+    pluralName: 'user-workoutplans';
+    displayName: 'user_workoutplan';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    title: Attribute.String;
+    description: Attribute.Text;
+    days: Attribute.String;
+    user_cat_sches: Attribute.Relation<
+      'api::user-workoutplan.user-workoutplan',
+      'manyToMany',
+      'api::user-cat-sch.user-cat-sch'
+    >;
+    user: Attribute.Relation<
+      'api::user-workoutplan.user-workoutplan',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::user-workoutplan.user-workoutplan',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::user-workoutplan.user-workoutplan',
       'oneToOne',
       'admin::user'
     > &
@@ -1168,6 +1336,9 @@ declare module '@strapi/types' {
       'api::exercise.exercise': ApiExerciseExercise;
       'api::muscle.muscle': ApiMuscleMuscle;
       'api::subscription.subscription': ApiSubscriptionSubscription;
+      'api::user-cat-sch.user-cat-sch': ApiUserCatSchUserCatSch;
+      'api::user-exercise.user-exercise': ApiUserExerciseUserExercise;
+      'api::user-workoutplan.user-workoutplan': ApiUserWorkoutplanUserWorkoutplan;
       'api::wallet.wallet': ApiWalletWallet;
       'api::workoutplan.workoutplan': ApiWorkoutplanWorkoutplan;
     }

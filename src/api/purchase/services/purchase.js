@@ -7,6 +7,8 @@ const server = require("../../../../config/server");
 const { default: axios } = require("axios");
 
 let urlPattern = process.env.PURCHASE_VERIFY_URL;
+let subscriptionUrlPattern = process.env.PURCHASE_SUBSCRIBE_VERIFY_URL;
+let subscriptionAckPattern = process.env.PURCHASE_SUBSCRIBE_ACKNOWLEDGE_URL;
 
 let options = {
   email: process.env.PURCHASE_EMAIL,
@@ -38,14 +40,74 @@ module.exports = () => ({
 
   async verifyPurchase(user_id, receipt) {
     let finalUrl = util.format(
-      urlPattern,
+      subscriptionUrlPattern,
+      encodeURIComponent(receipt.packageName),
+      // encodeURIComponent(receipt.productId),
+      encodeURIComponent(receipt.purchaseToken)
+    );
+
+    let ackUrl = util.format(
+      subscriptionAckPattern,
       encodeURIComponent(receipt.packageName),
       encodeURIComponent(receipt.productId),
       encodeURIComponent(receipt.purchaseToken)
     );
     console.log(receipt);
-    const verifiedInfo = await this.verify(finalUrl);
-    console.log(verifiedInfo);
+
+    const verifiedInfo = await this.verify(finalUrl, ackUrl);
+    console.log("verifiedInfo", verifiedInfo);
+    console.log("done");
+    // Subscription
+    // if (verifiedInfo != null) {
+
+    try {
+      console.log({
+        purchased_at: verifiedInfo.startTime,
+        token: receipt.purchaseToken,
+        last_order_id: verifiedInfo.latestOrderId,
+        region: verifiedInfo.regionCode,
+        email: decodeURIComponent(
+          verifiedInfo.externalAccountIdentifiers.obfuscatedExternalAccountId
+        ),
+        user: user_id,
+        product_id: verifiedInfo.lineItems[0].productId,
+        expire_time: verifiedInfo.lineItems[0].expiryTime,
+      });
+      const subscription = await strapi
+        .query("api::subscription.subscription")
+        .create({
+          data: {
+            purchased_at: verifiedInfo.startTime,
+            token: receipt.purchaseToken,
+            last_order_id: verifiedInfo.latestOrderId,
+            region: verifiedInfo.regionCode,
+            email: decodeURIComponent(
+              verifiedInfo.externalAccountIdentifiers
+                .obfuscatedExternalAccountId
+            ),
+            user: user_id,
+            product_id: verifiedInfo.lineItems[0].productId,
+            expire_time: verifiedInfo.lineItems[0].expiryTime,
+          },
+        });
+
+      await strapi.query("plugin::users-permissions.user").update({
+        where: {
+          id: user_id,
+        },
+        data: {
+          subscribed: true,
+          subscriber: true,
+          subscription_expire_time: verifiedInfo.lineItems[0].expiryTime,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
+    return verifiedInfo;
+
+    // Consumables
     if (verifiedInfo != null) {
       const subscription = await strapi
         .query("api::subscription.subscription")
@@ -96,7 +158,7 @@ module.exports = () => ({
     return true;
   },
 
-  async verify(finalUrl) {
+  async verify(finalUrl, ackUrl) {
     try {
       const client = new JWT({
         email: options.email,
@@ -110,11 +172,17 @@ module.exports = () => ({
         url: infoUrl,
       });
       var purchaseInfo = response.data;
+      console.log(purchaseInfo);
       if (purchaseInfo) {
-        if (purchaseInfo.consumptionState == 0) {
+        if (
+          purchaseInfo.acknowledgementState == "ACKNOWLEDGEMENT_STATE_PENDING"
+        ) {
           await client.request({
             method: "POST",
-            url: infoUrl + ":consume",
+            url: ackUrl,
+            // data : {
+            //   developerPayload :
+            // }
           });
           purchaseInfo = {
             coins: 30,
@@ -123,6 +191,7 @@ module.exports = () => ({
           return purchaseInfo;
         }
       }
+      return purchaseInfo;
     } catch (error) {
       console.error("Error making request:", error);
       return null;
@@ -140,4 +209,23 @@ module.exports = () => ({
 //   acknowledgementState: 1,
 //   kind: 'androidpublisher#productPurchase',
 //   regionCode: 'IN'
+// }
+
+// {
+//   kind: 'androidpublisher#subscriptionPurchaseV2',
+//   startTime: '2024-02-26T07:33:30.598Z',
+//   regionCode: 'IN',
+//   subscriptionState: 'SUBSCRIPTION_STATE_ACTIVE',
+//   latestOrderId: 'GPA.3360-8510-8304-53962',
+//   testPurchase: {},
+//   acknowledgementState: 'ACKNOWLEDGEMENT_STATE_PENDING',
+//   externalAccountIdentifiers: { obfuscatedExternalAccountId: 'useremailId' },
+//   lineItems: [
+//     {
+//       productId: 'three_months_pack',
+//       expiryTime: '2024-02-26T07:43:27.435Z',
+//       autoRenewingPlan: [Object],
+//       offerDetails: [Object]
+//     }
+//   ]
 // }

@@ -26,6 +26,27 @@
     },
     "region": {
       "type": "string"
+    },
+    "token": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "private": true
+    },
+    "last_order_id": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "product_id": {
+      "type": "string",
+      "required": true
+    },
+    "expire_time": {
+      "type": "datetime",
+      "required": true
     }
   }
 }

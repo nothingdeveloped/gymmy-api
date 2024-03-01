@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_workoutplans",
+  "info": {
+    "singularName": "user-workoutplan",
+    "pluralName": "user-workoutplans",
+    "displayName": "user_workoutplan",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "days": {
+      "type": "string"
+    },
+    "user_cat_sches": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::user-cat-sch.user-cat-sch",
+      "mappedBy": "user_workoutplans"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "user_workoutplans"
+    }
+  }
+}

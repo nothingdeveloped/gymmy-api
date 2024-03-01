@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_exercises",
+  "info": {
+    "singularName": "user-exercise",
+    "pluralName": "user-exercises",
+    "displayName": "user_exercise",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "time": {
+      "type": "float"
+    },
+    "user_cat_sches": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::user-cat-sch.user-cat-sch",
+      "mappedBy": "user_exercises"
+    },
+    "tags": {
+      "type": "text"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "user_exercises"
+    },
+    "image_url": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    }
+  }
+}
