@@ -6,7 +6,7 @@ module.exports = {
       handler: "remote-report.getAll",
       config: {
         policies: [],
-        middlewares: [],
+        // middlewares: ["global::reader"],
       },
     },
     {
@@ -15,6 +15,7 @@ module.exports = {
       handler: "remote-report.save",
       config: {
         policies: [],
+        // middlewares: ["global::writer"],
       },
     },
     {
@@ -23,6 +24,7 @@ module.exports = {
       handler: "remote-report.deleteReport",
       config: {
         policies: [],
+        // middlewares: ["global::reader"],
       },
     },
     {
@@ -31,6 +33,7 @@ module.exports = {
       handler: "remote-report.deleteUserReport",
       config: {
         policies: [],
+        // middlewares: ["global::reader"],
       },
     },
     {
@@ -39,6 +42,7 @@ module.exports = {
       handler: "remote-report.deleteExerciseReport",
       config: {
         policies: [],
+        // middlewares: ["global::reader"],
       },
     },
   ],

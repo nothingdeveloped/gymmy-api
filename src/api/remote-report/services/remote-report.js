@@ -14,7 +14,8 @@ module.exports = () => ({
     hmac.update(data.toString());
     const hash = hmac.digest("hex");
     console.log(hash);
-    return hash;
+    // return hash;
+    return data;
   },
 
   async findOne(params) {

@@ -1101,6 +1101,43 @@ export interface ApiSubscriptionSubscription extends Schema.CollectionType {
   };
 }
 
+export interface ApiSubscriptionPlanSubscriptionPlan
+  extends Schema.CollectionType {
+  collectionName: 'subscription_plans';
+  info: {
+    singularName: 'subscription-plan';
+    pluralName: 'subscription-plans';
+    displayName: 'subscription_plan';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String;
+    price: Attribute.Float;
+    discount: Attribute.Float;
+    description: Attribute.String;
+    gplan_id: Attribute.String;
+    usertype: Attribute.Enumeration<['STARTER', 'CUSTOMER', 'POTENTIAL_USER']>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::subscription-plan.subscription-plan',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::subscription-plan.subscription-plan',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiUserCatSchUserCatSch extends Schema.CollectionType {
   collectionName: 'user_cat_sches';
   info: {
@@ -1336,6 +1373,7 @@ declare module '@strapi/types' {
       'api::exercise.exercise': ApiExerciseExercise;
       'api::muscle.muscle': ApiMuscleMuscle;
       'api::subscription.subscription': ApiSubscriptionSubscription;
+      'api::subscription-plan.subscription-plan': ApiSubscriptionPlanSubscriptionPlan;
       'api::user-cat-sch.user-cat-sch': ApiUserCatSchUserCatSch;
       'api::user-exercise.user-exercise': ApiUserExerciseUserExercise;
       'api::user-workoutplan.user-workoutplan': ApiUserWorkoutplanUserWorkoutplan;

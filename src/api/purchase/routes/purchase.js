@@ -18,5 +18,14 @@ module.exports = {
         middlewares: [],
       },
     },
+    {
+      method: "GET",
+      path: "/subscription-status",
+      handler: "purchase.subscriptionStatus",
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
   ],
 };

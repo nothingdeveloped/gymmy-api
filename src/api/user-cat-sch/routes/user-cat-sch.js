@@ -12,6 +12,6 @@ module.exports = createCoreRouter("api::user-cat-sch.user-cat-sch", {
     findOne: { middlewares: ["global::reader"] },
     create: { middlewares: ["global::writer"] },
     update: { middlewares: ["global::writer"] },
-    delete: { middlewares: ["global::writer"] },
+    delete: { middlewares: ["global::reader"] },
   },
 });
