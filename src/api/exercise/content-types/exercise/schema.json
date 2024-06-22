@@ -57,6 +57,9 @@
     "banner_image_urls": {
       "type": "json",
       "required": false
+    },
+    "rest_time": {
+      "type": "integer"
     }
   }
 }
