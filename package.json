@@ -8,7 +8,7 @@
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi",
-    "run": "node server.js"
+    "prod": "node server.js"
   },
   "dependencies": {
     "@strapi/plugin-cloud": "5.5.0",
