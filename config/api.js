@@ -3,8 +3,9 @@ module.exports = {
     privateAttributes: ["_v", "ids", "created_at"],
   },
   rest: {
+    // FIX: Not Working
     defaultLimit: 25,
-    maxLimit: 100,
+    maxLimit: 25,
     withCount: true,
   },
 };
