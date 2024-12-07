@@ -1,0 +1,26 @@
+version: 2.1
+orbs:
+  node: circleci/node@5
+jobs:
+  build:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          command: npm run build
+  deploy:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: deploy
+          command: "scripts/deploy.sh ${SSH_USER} ${SSH_HOST} ${SSH_KEY}"
+workflows:
+  build:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
