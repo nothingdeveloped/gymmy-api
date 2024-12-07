@@ -1,7 +1,9 @@
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const uri = process.env.MONGO_URL;
-const collectionName = process.env.MONGO_COLLECTION_NAME;
+const dailyCollectionName = process.env.MONGO_DAILY_COLLECTION_NAME;
+const planCollectionName = process.env.MONGO_PLAN_COLLECTION_NAME;
+const monthlyCollectionName = process.env.MONGO_MONTHLY_COLLECTION_NAME;
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -12,7 +14,9 @@ const client = new MongoClient(uri, {
 });
 
 const db = client.db();
-const collection = db.collection(collectionName);
+const dailyCollection = db.collection(dailyCollectionName);
+const planCollection = db.collection(planCollectionName);
+const monthlyCollection = db.collection(monthlyCollectionName);
 const excludedFields = {
   user: 0,
 };
@@ -29,12 +33,19 @@ module.exports = {
       if (exer) {
         filter["exer_id"] = parseInt(exer);
       }
-      const result = await collection
+
+      const total = await dailyCollection.countDocuments(filter);
+
+      const result = await dailyCollection
         .find(filter, { projection: excludedFields })
         .skip(10 * (parseInt(page) - 1) ?? 0)
         .limit(10)
         .toArray();
-      return result;
+
+      return {
+        total: total,
+        data: result,
+      };
     } catch (error) {
       console.error(error);
       throw new Error("Error interacting with MongoDB");
@@ -43,7 +54,7 @@ module.exports = {
 
   async create(report) {
     try {
-      const result = await collection.insertOne(report);
+      const result = await dailyCollection.insertOne(report);
       return result;
     } catch (error) {
       console.error(error);
@@ -54,7 +65,10 @@ module.exports = {
   async deletById(user, id) {
     try {
       const objectId = new ObjectId(id);
-      const result = await collection.deleteMany({ user: user, _id: objectId });
+      const result = await dailyCollection.deleteMany({
+        user: user,
+        _id: objectId,
+      });
       return result;
     } catch (error) {
       console.error(error);
@@ -67,7 +81,7 @@ module.exports = {
       console.log({
         user: user,
       });
-      const result = await collection.deleteMany({ user: user });
+      const result = await dailyCollection.deleteMany({ user: user });
       return result;
     } catch (error) {
       console.error(error);
@@ -81,7 +95,7 @@ module.exports = {
         user: user,
         exercise: parseInt(exercise),
       });
-      const result = await collection.deleteMany({
+      const result = await dailyCollection.deleteMany({
         user: user,
         exercise: parseInt(exercise),
       });

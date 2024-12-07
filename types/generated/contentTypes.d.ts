@@ -1008,6 +1008,7 @@ export interface ApiExerciseExercise extends Schema.CollectionType {
       'api::cat-sch.cat-sch'
     >;
     banner_image_urls: Attribute.JSON;
+    rest_time: Attribute.Integer;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
