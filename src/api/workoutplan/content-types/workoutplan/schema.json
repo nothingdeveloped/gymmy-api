@@ -30,6 +30,15 @@
     },
     "days": {
       "type": "string"
+    },
+    "is_premium": {
+      "type": "boolean",
+      "default": false
+    },
+    "order": {
+      "type": "integer",
+      "required": true,
+      "default": 0
     }
   }
 }
