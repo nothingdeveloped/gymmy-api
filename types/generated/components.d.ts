@@ -1,23 +1,23 @@
-import type { Schema, Attribute } from '@strapi/strapi';
+import type { Schema, Struct } from '@strapi/strapi';
 
-export interface ChallengeChallenge extends Schema.Component {
+export interface ChallengeChallenge extends Struct.ComponentSchema {
   collectionName: 'components_challenge_challenges';
   info: {
     displayName: 'challenge';
     icon: 'bell';
   };
   attributes: {
-    title: Attribute.String;
-    description: Attribute.Text;
-    image_url: Attribute.String;
-    banner_image_url: Attribute.String;
-    props: Attribute.JSON;
+    banner_image_url: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    image_url: Schema.Attribute.String;
+    props: Schema.Attribute.JSON;
+    title: Schema.Attribute.String;
   };
 }
 
-declare module '@strapi/types' {
-  export module Shared {
-    export interface Components {
+declare module '@strapi/strapi' {
+  export module Public {
+    export interface ComponentSchemas {
       'challenge.challenge': ChallengeChallenge;
     }
   }

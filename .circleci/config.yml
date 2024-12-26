@@ -16,7 +16,7 @@ jobs:
     steps:
       - run:
           name: deploy
-          command: "scripts/deploy.sh ${SSH_USER} ${SSH_HOST} ${SSH_KEY}"
+          command: "scripts/deploy.sh ${SSH_USER} ${SSH_HOST}"
 workflows:
   build:
     jobs:
