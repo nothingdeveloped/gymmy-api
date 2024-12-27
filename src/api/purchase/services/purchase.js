@@ -1,10 +1,7 @@
 "use strict";
 
-const request = require("google-oauth-jwt").requestWithJWT;
 const util = require("util");
-const { JWT, GoogleAuth } = require("google-auth-library");
-const server = require("../../../../config/server");
-const { default: axios } = require("axios");
+const { JWT } = require("google-auth-library");
 
 let urlPattern = process.env.PURCHASE_VERIFY_URL;
 let subscriptionUrlPattern = process.env.PURCHASE_SUBSCRIBE_VERIFY_URL;
@@ -12,7 +9,8 @@ let subscriptionAckPattern = process.env.PURCHASE_SUBSCRIBE_ACKNOWLEDGE_URL;
 
 let options = {
   email: process.env.PURCHASE_EMAIL,
-  key: process.env.PURCHASE_PRIVATE_KEY,
+  key:
+    `${process.env.PURCHASE_PRIVATE_KEY}`?.replace(/\\n/g, "\n") || undefined,
 };
 
 module.exports = () => ({
@@ -39,57 +37,48 @@ module.exports = () => ({
   },
 
   async verifyPurchase(user_id, receipt) {
-    let finalUrl = util.format(
-      subscriptionUrlPattern,
-      encodeURIComponent(receipt.packageName),
-      // encodeURIComponent(receipt.productId),
-      encodeURIComponent(receipt.purchaseToken)
-    );
-
-    let ackUrl = util.format(
-      subscriptionAckPattern,
-      encodeURIComponent(receipt.packageName),
-      encodeURIComponent(receipt.productId),
-      encodeURIComponent(receipt.purchaseToken)
-    );
-    console.log(receipt);
-
-    const verifiedInfo = await this.verify(finalUrl, ackUrl);
-    console.log("verifiedInfo", verifiedInfo);
-    console.log("done");
     // Subscription
     // if (verifiedInfo != null) {
 
     try {
-      console.log({
-        purchased_at: verifiedInfo.startTime,
-        token: receipt.purchaseToken,
-        last_order_id: verifiedInfo.latestOrderId,
-        region: verifiedInfo.regionCode,
-        email: decodeURIComponent(
-          verifiedInfo.externalAccountIdentifiers.obfuscatedExternalAccountId
-        ),
-        user: user_id,
-        product_id: verifiedInfo.lineItems[0].productId,
-        expire_time: verifiedInfo.lineItems[0].expiryTime,
+      let finalUrl = util.format(
+        subscriptionUrlPattern,
+        encodeURIComponent(receipt.packageName),
+        // encodeURIComponent(receipt.productId),
+        encodeURIComponent(receipt.purchaseToken),
+      );
+
+      let ackUrl = util.format(
+        subscriptionAckPattern,
+        encodeURIComponent(receipt.packageName),
+        encodeURIComponent(receipt.productId),
+        encodeURIComponent(receipt.purchaseToken),
+      );
+      console.log({ receipt, user_id });
+      const verifiedInfo = await this.verify(finalUrl, ackUrl);
+      if (verifiedInfo == null) {
+        console.error({ receipt, user_id, status: "failed", verifiedInfo });
+        return {
+          error: true,
+          message: "Oops something went wrong",
+        };
+      }
+      console.log("verifiedInfo", verifiedInfo);
+
+      await strapi.query("api::subscription.subscription").create({
+        data: {
+          purchased_at: verifiedInfo.startTime,
+          token: receipt.purchaseToken,
+          last_order_id: verifiedInfo.latestOrderId,
+          region: verifiedInfo.regionCode,
+          email: decodeURIComponent(
+            verifiedInfo.externalAccountIdentifiers.obfuscatedExternalAccountId,
+          ),
+          user: user_id,
+          product_id: verifiedInfo.lineItems[0].productId,
+          expire_time: verifiedInfo.lineItems[0].expiryTime,
+        },
       });
-      const subscription = await strapi
-        .query("api::subscription.subscription")
-        .create({
-          data: {
-            purchased_at: verifiedInfo.startTime,
-            token: receipt.purchaseToken,
-            last_order_id: verifiedInfo.latestOrderId,
-            region: verifiedInfo.regionCode,
-            email: decodeURIComponent(
-              verifiedInfo.externalAccountIdentifiers
-                .obfuscatedExternalAccountId
-            ),
-            user: user_id,
-            product_id: verifiedInfo.lineItems[0].productId,
-            expire_time: verifiedInfo.lineItems[0].expiryTime,
-          },
-        });
 
       await strapi.query("plugin::users-permissions.user").update({
         where: {
@@ -101,52 +90,59 @@ module.exports = () => ({
           subscription_expire_time: verifiedInfo.lineItems[0].expiryTime,
         },
       });
+      console.log({ receipt, user_id, status: "success" });
+      return {
+        error: false,
+        ...verifiedInfo,
+      };
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      console.error({ receipt, user_id, status: "failed" });
+      return {
+        error: true,
+        message: "Oops something went wrong",
+      };
     }
-
-    return verifiedInfo;
-
-    // Consumables
-    if (verifiedInfo != null) {
-      const subscription = await strapi
-        .query("api::subscription.subscription")
-        .create({
-          data: {
-            purchased_at: verifiedInfo.purchaseTimeMillis,
-            order_id: verifiedInfo.orderId,
-            region: verifiedInfo.regionCode,
-            user: user_id,
-          },
-        });
-      const wallet = await strapi.query("api::wallet.wallet").findOne({
-        where: {
-          user: user_id,
-        },
-      });
-      let walletInfo = null;
-      if (wallet) {
-        walletInfo = await strapi.query("api::wallet.wallet").update({
-          where: {
-            user: user_id,
-          },
-          data: {
-            coins: parseInt(wallet.coins) + verifiedInfo.coins,
-          },
-        });
-      } else {
-        // create
-        walletInfo = await strapi.query("api::wallet.wallet").create({
-          data: {
-            user: user_id,
-            coins: verifiedInfo.coins,
-          },
-        });
-      }
-      return walletInfo;
-      return subscription;
-    }
-    return verifiedInfo;
+    // // Consumables
+    // if (verifiedInfo != null) {
+    //   const subscription = await strapi
+    //     .query("api::subscription.subscription")
+    //     .create({
+    //       data: {
+    //         purchased_at: verifiedInfo.purchaseTimeMillis,
+    //         order_id: verifiedInfo.orderId,
+    //         region: verifiedInfo.regionCode,
+    //         user: user_id,
+    //       },
+    //     });
+    //   const wallet = await strapi.query("api::wallet.wallet").findOne({
+    //     where: {
+    //       user: user_id,
+    //     },
+    //   });
+    //   let walletInfo = null;
+    //   if (wallet) {
+    //     walletInfo = await strapi.query("api::wallet.wallet").update({
+    //       where: {
+    //         user: user_id,
+    //       },
+    //       data: {
+    //         coins: parseInt(wallet.coins) + verifiedInfo.coins,
+    //       },
+    //     });
+    //   } else {
+    //     // create
+    //     walletInfo = await strapi.query("api::wallet.wallet").create({
+    //       data: {
+    //         user: user_id,
+    //         coins: verifiedInfo.coins,
+    //       },
+    //     });
+    //   }
+    //   return walletInfo;
+    //   return subscription;
+    // }
+    // return verifiedInfo;
   },
 
   isValidJson(string) {
@@ -163,8 +159,8 @@ module.exports = () => ({
       const client = new JWT({
         email: options.email,
         key: options.key,
-        clientId: "102268904510161475935",
-        keyId: "4de538e0c2d4d6982363eafaa65116aa29f344f7",
+        clientId: process.env.PURCHASE_CLIENT_ID,
+        keyId: process.env.PURCHASE_KEY_ID,
         scopes: ["https://www.googleapis.com/auth/androidpublisher"],
       });
       const infoUrl = finalUrl;
