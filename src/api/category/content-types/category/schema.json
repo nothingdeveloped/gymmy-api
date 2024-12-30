@@ -4,7 +4,8 @@
   "info": {
     "singularName": "category",
     "pluralName": "categories",
-    "displayName": "category"
+    "displayName": "category",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -32,6 +33,15 @@
       "relation": "manyToMany",
       "target": "api::cat-sch.cat-sch",
       "mappedBy": "categories"
+    },
+    "is_premium": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "default": 100000
     }
   }
 }

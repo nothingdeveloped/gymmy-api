@@ -50,6 +50,11 @@
       "relation": "manyToMany",
       "target": "api::workoutplan.workoutplan",
       "mappedBy": "cat_sch"
+    },
+    "order": {
+      "type": "integer",
+      "default": 0,
+      "required": true
     }
   }
 }

@@ -442,6 +442,9 @@ export interface ApiCatSchCatSch extends Struct.CollectionTypeSchema {
       'api::cat-sch.cat-sch'
     > &
       Schema.Attribute.Private;
+    order: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
     time_sec: Schema.Attribute.Float;
     title: Schema.Attribute.String & Schema.Attribute.Required;
@@ -458,6 +461,7 @@ export interface ApiCatSchCatSch extends Struct.CollectionTypeSchema {
 export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   collectionName: 'categories';
   info: {
+    description: '';
     displayName: 'category';
     pluralName: 'categories';
     singularName: 'category';
@@ -471,6 +475,9 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     image_url: Schema.Attribute.String;
+    is_premium: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
     level: Schema.Attribute.Enumeration<
       ['BEGINNER', 'INTERMEDIATE', 'EXPERT']
     > &
@@ -482,6 +489,7 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
       'api::category.category'
     > &
       Schema.Attribute.Private;
+    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<100000>;
     publishedAt: Schema.Attribute.DateTime;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
@@ -531,6 +539,7 @@ export interface ApiDashboardItemDashboardItem
     draftAndPublish: true;
   };
   attributes: {
+    ad_unit_id: Schema.Attribute.String;
     banner_image_url: Schema.Attribute.String;
     color: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
@@ -553,7 +562,13 @@ export interface ApiDashboardItemDashboardItem
       Schema.Attribute.DefaultTo<0>;
     props: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
+    sort: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
+    type: Schema.Attribute.Enumeration<['ITEM', 'ADUNIT']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'ITEM'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

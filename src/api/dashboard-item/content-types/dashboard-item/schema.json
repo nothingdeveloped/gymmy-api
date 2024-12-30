@@ -42,6 +42,23 @@
     "color": {
       "type": "string",
       "maxLength": 15
+    },
+    "sort": {
+      "type": "integer",
+      "default": 0,
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "ITEM",
+        "ADUNIT"
+      ],
+      "default": "ITEM",
+      "required": true
+    },
+    "ad_unit_id": {
+      "type": "string"
     }
   }
 }
